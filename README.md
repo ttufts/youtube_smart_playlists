@@ -21,10 +21,14 @@ Run directly:
 
 To build docker image:
 
+     # Build docker image
      docker build -t youtube_smart_playlists -f Dockerfile .
 
+     # Create docker container
      docker create --name youtube_smart_playlists --volume <absolute path to config_data>:/config_data youtube_smart_playlists
 
+     # Start docker container
      docker start youtube_smart_playlists
 
+     # View progress
      docker logs -f youtube_smart_playlists
