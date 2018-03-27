@@ -1,3 +1,6 @@
+#!/usr/bin/python
+
+import argparse
 import os
 import json
 from datetime import datetime
@@ -15,12 +18,13 @@ class YoutubeSmartPlaylistManager:
     subscriptions_cache = "sub_cache.json"
     smart_playlists_file = "smart_playlists.json"
 
-    def __init__(self, creds):
+    def __init__(self, creds, smart_playlists):
         self.cache = {}
         self.get_authenticated_service(creds)
+        self.smart_playlists_file = smart_playlists
 
-        if os.path.isfile(YoutubeSmartPlaylistManager.smart_playlists_file):
-            with open(YoutubeSmartPlaylistManager.smart_playlists_file) as f:
+        if os.path.isfile(self.smart_playlists_file):
+            with open(self.smart_playlists_file) as f:
                 self.smart_playlists = json.load(f)
 
         if os.path.isfile(YoutubeSmartPlaylistManager.subscriptions_cache):
@@ -135,14 +139,12 @@ class YoutubeSmartPlaylistManager:
                         print("Added {} ({}) to {}".format(video_title, channel_title, playlist_name))
 
 
-def smart_playlist_daemon():
-    print(datetime.now())
-
-    ysp = YoutubeSmartPlaylistManager("creds.data")
-    ysp.handle_smart_playlists()
-
-    threading.Timer(60*30, smart_playlist_daemon).start()
-
-
 if __name__ == '__main__':
-    smart_playlist_daemon()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-c", "--creds_data", help="Credentials file. Run oauath.py to fill creds_data file.")
+    parser.add_argument("-p", "--smart_playlists", help="Smart playlists specifications file (JSON)")
+    args = parser.parse_args()
+
+    ysp = YoutubeSmartPlaylistManager(args.creds_data, args.smart_playlists)
+    ysp.handle_smart_playlists()
+    threading.Timer(60*30, ysp.handle_smart_playlists).start()
