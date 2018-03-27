@@ -124,7 +124,7 @@ class YoutubeSmartPlaylistManager:
 
     def handle_smart_playlists(self):
         for playlist_name in self.smart_playlists:
-            print("Handling {} smart playlist".format(playlist_name))
+            print("{}: Handling {} smart playlist".format(datetime.now(), playlist_name))
 
             playlist_id = self.smart_playlists[playlist_name]["playlist"]
             channels = self.smart_playlists[playlist_name]["channels"]
