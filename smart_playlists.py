@@ -123,20 +123,23 @@ class YoutubeSmartPlaylistManager:
             return False
 
     def handle_smart_playlists(self):
-        for playlist_name in self.smart_playlists:
-            print("{}: Handling {} smart playlist".format(datetime.now(), playlist_name))
+        try:
+            for playlist_name in self.smart_playlists:
+                print("{}: Handling {} smart playlist".format(datetime.now(), playlist_name))
 
-            playlist_id = self.smart_playlists[playlist_name]["playlist"]
-            channels = self.smart_playlists[playlist_name]["channels"]
+                playlist_id = self.smart_playlists[playlist_name]["playlist"]
+                channels = self.smart_playlists[playlist_name]["channels"]
 
-            for channel in channels:
-                for video in self.get_todays_videos_by_channel(channel):
-                    video_id = video["snippet"]["resourceId"]["videoId"]
-                    video_title = video["snippet"]["title"]
-                    channel_title = video["snippet"]["channelTitle"]
+                for channel in channels:
+                    for video in self.get_todays_videos_by_channel(channel):
+                        video_id = video["snippet"]["resourceId"]["videoId"]
+                        video_title = video["snippet"]["title"]
+                        channel_title = video["snippet"]["channelTitle"]
 
-                    if self.add_video_to_playlist(video_id, playlist_id):
-                        print("Added {} ({}) to {}".format(video_title, channel_title, playlist_name))
+                        if self.add_video_to_playlist(video_id, playlist_id):
+                            print("Added {} ({}) to {}".format(video_title, channel_title, playlist_name))
+        except Exception:
+            pass
 
 
 if __name__ == '__main__':
